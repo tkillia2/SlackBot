@@ -34,6 +34,37 @@ def message(payload):
             message_counts[user_id] = 1
         #client.chat_postMessage(channel=channel_id, text=text)
 
+@app.route('/usage', methods=['POST'])
+def usage():
+    data=request.form
+    channel_id = data.get('channel_id')
+    
+    response = "Slack Bot Current Commands:\n all commands are slash commands (/command)\n \
+        bodule: puts the B emoji in front of whatever you type next (/bodule hello -> Bello\n \
+        mockery: mocks the following text to upper and lower case\n \
+        claps: puts the clap emoji between each word like you're fighting/yelling"
+
+    client.chat_postMessage(channel=channel_id, text=response)
+
+    return Response(), 200
+
+@app.route('/claps', methods=['POST'])
+def claps():
+    data = request.form
+    channel_id = data.get('channel_id')
+    text = data.get('text')
+
+    #phrase = text.rstrip().split()
+    response =''
+
+    for letter in text:
+        if letter == ' ':
+            letter = ' 👏 '
+        response += letter
+    client.chat_postMessage(channel=channel_id, text=response)
+
+    return Response(), 200
+
 @app.route('/bodule', methods=['POST'])
 def bodule():
     data = request.form
